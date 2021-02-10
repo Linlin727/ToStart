@@ -17,3 +17,11 @@ By creating to-do lists using **ToStart**, users can organize their daily life e
 As a university student,  to-do list is one of the most important elements in my life. This help me a lot on my schoolwork, from different deadlines to exam schedule, I always put things on the todo list application in my phone.
 So when this course offers me a chance to create my own application, I definitely would choose to design a to-do list application.
 
+## User Stories
+
+As a user, I want to be able to add a task to my to-do list
+As a user, I want to be able to view the list of tasks on my to-do list
+As a user, I want to be able to mark the statue of tasks as complete, in-progress, and incomplete on my to-do list
+As a user, I want to be able to delete a task from my to-do-list
+As a user, I want to be able to see the total number of tasks on my to-do list
+As a user, I want to be able to see the number of tasks that need to be done
