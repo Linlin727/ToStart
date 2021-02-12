@@ -98,6 +98,8 @@ public class ToStartApp {
     }
 
     private void doDeleteTask(ToDoList todoList) {
+        todoList.displayToDoList();
+
         System.out.println("Please enter Task you want to delete:");
         String taskName = input.nextLine();
         todoList.deleteTask(taskName);

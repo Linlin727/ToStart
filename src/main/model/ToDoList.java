@@ -18,6 +18,9 @@ public class ToDoList {
     }
 
     public boolean deleteTask(String task) {
+//        if (todoList.size() == 0) {
+//            return false;
+//        }
         int index = -7;
         for (int i = 0; i < todoList.size(); i++) {
             Task t = todoList.get(i);
