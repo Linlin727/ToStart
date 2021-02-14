@@ -13,11 +13,8 @@ public class ToDoList {
         todoList.add(t);
     }
 
-    public void deleteTask(int index) {
-        todoList.remove(index);
-    }
 
-    public boolean deleteTask(String task) {
+    public int deleteTask(String task) {
 //        if (todoList.size() == 0) {
 //            return false;
 //        }
@@ -30,30 +27,39 @@ public class ToDoList {
             }
         }
 
+
         if (index == -7) {
 //            System.out.println("This task does not exist");
-            return false;
+            return index;
         } else {
             todoList.remove(index);
 //            System.out.println(" This task is successfully deleted");
-            return true;
+            return index;
         }
 
     }
 
-    public void displayToDoList() {
+    public String displayToDoList() {
+        String s;
         if (todoList.size() == 0) {
-            System.out.println("ToStart-list is empty, please add task");
+            s = "This list is empty";
         } else {
-            System.out.println("Task\t\tStatue");
-            for (int i = 0; i < todoList.size(); i++) {
-                Task t = todoList.get(i);
-                System.out.println(t.getTask() + "\t\t\t" + t.getStatue());
-            }
+            s = todoList.toString();
+//            for (Task t : todoList) {
+//                s = t.toString();
+//            }
         }
+//                for (int i = 0; i < todoList.size(); i++) {
+//                    Task t = todoList.get(i);
+//                    s = t.getTask() + t.getState();
+//            }
+//                System.out.println(t.getTask() + "\t\t\t" + t.getStatue());
+
+
+        return s;
     }
 
-    public boolean updateTaskStatue(Task t) {
+    public boolean updateTaskState(Task t) {
         int index = -7;
         for (int i = 0; i < todoList.size(); i++) {
             Task task = todoList.get(i);
@@ -70,6 +76,16 @@ public class ToDoList {
 //            System.out.println(" The statue fo this task is successfully updated");
             return true;
         }
+    }
+
+    public int getSize() {
+        int size;
+        size = todoList.size();
+        return size;
+    }
+
+    public boolean contains(Task t) {
+        return todoList.contains(t);
     }
 
 }

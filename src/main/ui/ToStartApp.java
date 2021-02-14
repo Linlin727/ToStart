@@ -3,7 +3,6 @@ package ui;
 import model.Task;
 import model.ToDoList;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ToStartApp {
@@ -11,6 +10,9 @@ public class ToStartApp {
     private Task statue;
     private Scanner input;
     private boolean update;
+
+    private String string;
+    private int index;
 
     public ToStartApp() {
         runToStart();
@@ -43,7 +45,7 @@ public class ToStartApp {
 //                Task newTask = makeTask();
 //                todoList.addTask(newTask);
             } else if (choice.equals("2")) {
-                doDeleteTask(todoList);
+                doDeleteTask(todoList, index);
 //                System.out.println("Please enter Task you want to delete:");
 //                String taskName = input.nextLine();
 //                todoList.deleteTask(taskName);
@@ -66,7 +68,7 @@ public class ToStartApp {
 //                }
 
             } else if (choice.equals("4")) {
-                todoList.displayToDoList();
+                doDisplayList(todoList, string);
 
             } else if (choice.equals("5")) {
                 keepGoing = false;
@@ -97,36 +99,55 @@ public class ToStartApp {
         todoList.addTask(newTask);
     }
 
-    private void doDeleteTask(ToDoList todoList) {
-        todoList.displayToDoList();
-
-        System.out.println("Please enter Task you want to delete:");
-        String taskName = input.nextLine();
-        todoList.deleteTask(taskName);
-        if (todoList.deleteTask(taskName)) {
-            System.out.println(" The statue fo this task is successfully updated");
-
+    private void doDeleteTask(ToDoList todoList, int index) {
+        if (todoList.getSize() == 0) {
+            return;
         } else {
-            System.out.println("This task does not exist");
+//            todoList.displayToDoList();
+            System.out.println("Please enter Task you want to delete:");
+            String taskName = input.nextLine();
+            todoList.deleteTask(taskName);
+            if (index == -7) {
+                System.out.println("This task does not exist");
+            } else {
+                System.out.println(" This task is successfully deleted");
+            }
+//            System.out.println(" This task is successfully deleted");
+//            boolean a = todoList.deleteTask(taskName);
+//            if (a == true) {
+//                System.out.println(" This task is successfully deleted");
+//
+//            } else {
+//                System.out.println("This task does not exist");
+//            }
         }
     }
 
     private void doMarkTask(ToDoList todoList) {
-        Task taskWithNewStatue = updateStatue();
-        todoList.updateTaskStatue(taskWithNewStatue);
-        if (todoList.updateTaskStatue(taskWithNewStatue)) {
-            System.out.println(" The statue fo this task is successfully updated");
-
+        if (todoList.getSize() == 0) {
+            return;
         } else {
-            System.out.println("This task does not exist");
+            Task taskWithNewState = updateState();
+            todoList.updateTaskState(taskWithNewState);
+            if (todoList.updateTaskState(taskWithNewState)) {
+                System.out.println(" The state of this task is successfully updated");
+
+            } else {
+                System.out.println("This task does not exist");
+            }
         }
+    }
+
+    private void doDisplayList(ToDoList todoList, String s) {
+        System.out.println(todoList.displayToDoList());
+
     }
 
     private Task makeTask() {
         input = new Scanner(System.in);
         System.out.println("Please enter Task:");
         String task = input.nextLine();
-        System.out.println("Please choose Statue of this task, In-progress or Have not started:");
+        System.out.println("Please choose State of this task, In-progress or Done:");
         String statue = input.nextLine();
 
         Task t = new Task(task, statue);
@@ -134,13 +155,13 @@ public class ToStartApp {
 
     }
 
-    private Task updateStatue() {
+    private Task updateState() {
         input = new Scanner(System.in);
         System.out.println("Please enter the task you want to update:");
         String task = input.nextLine();
-        System.out.println("Please choose a new statue for this task");
-        String statue = input.nextLine();
-        Task t = new Task(task, statue);
+        System.out.println("Please choose a new state for this task");
+        String state = input.nextLine();
+        Task t = new Task(task, state);
         return t;
     }
 }

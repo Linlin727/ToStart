@@ -1,35 +1,30 @@
 package model;
 
+@SuppressWarnings("checkstyle:WhitespaceAround")
 public class Task {
     //Things need to be done
     private String task;
     //Statue
-    private String statue;
+    private String state;
 
-    public Task(String task, String statue) {
+    public Task(String task, String state) {
         this.task = task;
-        this.statue = statue;
+        this.state = state;
     }
 
-    public Task(String task) {
-        this.task = task;
-        this.statue = "Incomplete";
-    }
 
     public String getTask() {
         return task;
     }
 
-    public void setTask(String task) {
-        this.task = task;
+
+
+    public String getState() {
+        return state;
     }
 
-    public String getStatue() {
-        return statue;
+    @Override
+    public String toString() {
+        return "task: " + task + " state: " + state;
     }
-
-    public void setStatue(String statue) {
-        this.statue = statue;
-    }
-
 }
