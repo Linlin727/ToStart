@@ -10,7 +10,7 @@ By creating to-do lists using **ToStart**, users can organize their daily life e
 
 - _Students_ who are busy with course works and after school activities
 - _Employees_ who want to balance job and life
-- item 3
+
 
 ## Why ToStart
 
@@ -23,10 +23,7 @@ As a user, I want to be able to add a task to my to-do list
 
 As a user, I want to be able to view the list of tasks on my to-do list
 
-As a user, I want to be able to mark the statue of tasks as complete, in-progress, and incomplete on my to-do list
+As a user, I want to be able to mark the statue of tasks on my to-do list
 
 As a user, I want to be able to delete a task from my to-do-list
 
-As a user, I want to be able to see the total number of tasks on my to-do list
-
-As a user, I want to be able to see the number of tasks that need to be done
