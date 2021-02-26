@@ -14,7 +14,7 @@ public class ToDoList {
     }
 
 
-    public int deleteTask(String task) {
+    public boolean deleteTask(String task) {
 //        if (todoList.size() == 0) {
 //            return false;
 //        }
@@ -30,11 +30,11 @@ public class ToDoList {
 
         if (index == -7) {
 //            System.out.println("This task does not exist");
-            return index;
+            return false;
         } else {
             todoList.remove(index);
 //            System.out.println(" This task is successfully deleted");
-            return index;
+            return true;
         }
 
     }

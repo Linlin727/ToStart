@@ -106,8 +106,8 @@ public class ToStartApp {
 //            todoList.displayToDoList();
             System.out.println("Please enter Task you want to delete:");
             String taskName = input.nextLine();
-            todoList.deleteTask(taskName);
-            if (index == -7) {
+//            todoList.deleteTask(taskName);
+            if (!todoList.deleteTask(taskName)) {
                 System.out.println("This task does not exist");
             } else {
                 System.out.println(" This task is successfully deleted");
