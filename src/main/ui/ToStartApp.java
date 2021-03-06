@@ -136,11 +136,11 @@ public class ToStartApp {
     }
 
     private void doDisplayList() {
-//        System.out.println(todoList.displayToDoList());
-        List<Task> todos = todoList.getToDoList();
-        for (Task t : todos) {
-            System.out.println(t);
-        }
+        System.out.println(todoList.displayToDoList());
+//        List<Task> todos = todoList.getToDoList();
+//        for (Task t : todos) {
+//            System.out.println(t);
+//        }
 
     }
 

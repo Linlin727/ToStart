@@ -45,20 +45,21 @@ public class ToDoList implements Writable {
 
     }
 
-    public List<Task> getToDoList() {
-        return Collections.unmodifiableList(todoList);
-    }
+//    public List<Task> getToDoList() {
+//        return Collections.unmodifiableList(todoList);
+//    }
 
-//    public String displayToDoList() {
-//        String s;
-//        if (todoList.size() == 0) {
-//            s = "This list is empty";
-//        } else {
-//            s = todoList.toString();
-//            for (Task t : todoList) {
-//                s = t.toString();
-//            }
-//        }
+    public String displayToDoList() {
+        String s;
+        if (todoList.size() == 0) {
+            s = "This list is empty";
+        } else {
+            s = todoList.toString();
+            for (Task t : todoList) {
+                s = t.toString();
+            }
+        }
+
 //                for (int i = 0; i < todoList.size(); i++) {
 //                    Task t = todoList.get(i);
 //                    s = t.getTask() + t.getState();
@@ -66,8 +67,8 @@ public class ToDoList implements Writable {
 //                System.out.println(t.getTask() + "\t\t\t" + t.getStatue());
 
 //
-//        return s;
-//    }
+        return s;
+    }
 
     public boolean updateTaskState(Task t) {
         int index = -7;
