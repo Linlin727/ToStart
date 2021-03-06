@@ -57,17 +57,17 @@ public class ToDoListTest {
         assertFalse(testToDoList.deleteTask("xx"));
 
     }
-//    @Test
-//    void TestDisplayToDoList(){
-//        testToDoList.addTask(task);
-//        Task task2 = new Task("cc", "dd");
-//        testToDoList.addTask(task2);
-//        assertEquals(testToDoList.displayToDoList(),"[task: aa state: bb, task: cc state: dd]");
-//    }
-//    @Test
-//    void TestDisplayToDoListEmptyList(){
-//        assertEquals(testToDoList.displayToDoList(),"This list is empty");
-//    }
+    @Test
+    void TestDisplayToDoList(){
+        testToDoList.addTask(task);
+        Task task2 = new Task("cc", "dd");
+        testToDoList.addTask(task2);
+        assertEquals(testToDoList.displayToDoList(),"[task: aa state: bb, task: cc state: dd]");
+    }
+    @Test
+    void TestDisplayToDoListEmptyList(){
+        assertEquals(testToDoList.displayToDoList(),"This list is empty");
+    }
 
     @Test
     void TestUpdateTaskState(){

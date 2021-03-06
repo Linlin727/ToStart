@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+// Represents a todoList as list of tasks
 public class ToDoList implements Writable {
     private ArrayList<Task> todoList;
 
@@ -15,15 +16,19 @@ public class ToDoList implements Writable {
         todoList = new ArrayList<>();
     }
 
+    // MODIFIES: todoList
+    // EFFECTS: add t to todoList
+
     public void addTask(Task t) {
         todoList.add(t);
     }
 
 
+    // MODIFIES: todoList
+    // EFFECTS: if there exist a task with task name "task",delete this task from todoList and returns true
+    // otherwise returns false
+
     public boolean deleteTask(String task) {
-//        if (todoList.size() == 0) {
-//            return false;
-//        }
         int index = -7;
         for (int i = 0; i < todoList.size(); i++) {
             Task t = todoList.get(i);
@@ -35,19 +40,17 @@ public class ToDoList implements Writable {
 
 
         if (index == -7) {
-//            System.out.println("This task does not exist");
             return false;
         } else {
             todoList.remove(index);
-//            System.out.println(" This task is successfully deleted");
             return true;
         }
 
     }
 
-//    public List<Task> getToDoList() {
-//        return Collections.unmodifiableList(todoList);
-//    }
+
+    // EFFECTS:returns a String which represents the todolist if the todoList is not empty
+    //returns the String "This list is empty" is the todoList is empty
 
     public String displayToDoList() {
         String s;
@@ -55,21 +58,13 @@ public class ToDoList implements Writable {
             s = "This list is empty";
         } else {
             s = todoList.toString();
-            for (Task t : todoList) {
-                s = t.toString();
-            }
         }
-
-//                for (int i = 0; i < todoList.size(); i++) {
-//                    Task t = todoList.get(i);
-//                    s = t.getTask() + t.getState();
-//            }
-//                System.out.println(t.getTask() + "\t\t\t" + t.getStatue());
-
-//
         return s;
     }
 
+    // MODIFIES: todoList
+    // EFFECTS: change the task with the same name of t to t which has a new state
+    // returns true if the state of task t has been updated, false otherwise
     public boolean updateTaskState(Task t) {
         int index = -7;
         for (int i = 0; i < todoList.size(); i++) {
@@ -80,11 +75,9 @@ public class ToDoList implements Writable {
             }
         }
         if (index == -7) {
-//            System.out.println("This task does not exist");
             return false;
         } else {
             todoList.set(index, t);
-//            System.out.println(" The statue fo this task is successfully updated");
             return true;
         }
     }
@@ -99,6 +92,7 @@ public class ToDoList implements Writable {
         return todoList.get(i);
     }
 
+    // EFFECTS: returns true if todoList contains t, false otherwise
     public boolean contains(Task t) {
         return todoList.contains(t);
     }
@@ -111,12 +105,8 @@ public class ToDoList implements Writable {
 
 
     // EFFECTS: returns tasks in this todoList as a JSON array
+    @Override
     public JSONArray toJson() {
-//        JSONArray jsonArray = new JSONArray();
-//
-//        for (Task t : todoList) {
-//            jsonArray.put(t.toJson());
-//        }
         ArrayList<JSONObject> jasonObjects = new ArrayList<>();
         for (Task t : todoList) {
             JSONObject jasonObject = new JSONObject();

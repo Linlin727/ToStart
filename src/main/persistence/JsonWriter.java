@@ -8,7 +8,9 @@ import org.json.JSONObject;
 import java.io.*;
 import java.util.ArrayList;
 
-// Represents a writer that writes JSON representation of workroom to file
+// Represents a writer that writes JSON representation of todoList to file
+// Citation: code obtained from JsonSerializationDemo
+//           URL:https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
 public class JsonWriter {
     private static final int TAB = 4;
     private PrintWriter writer;
@@ -27,7 +29,7 @@ public class JsonWriter {
     }
 
     // MODIFIES: this
-    // EFFECTS: writes JSON representation of workroom to file
+    // EFFECTS: writes JSON representation of todoList to file
     public void write(ToDoList todoList) {
         JSONArray jsonArray = todoList.toJson();
         saveToFile(jsonArray.toString());
