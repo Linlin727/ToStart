@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 @SuppressWarnings("checkstyle:WhitespaceAround")
 public class Task {
     //Things need to be done
@@ -27,4 +30,13 @@ public class Task {
     public String toString() {
         return "task: " + task + " state: " + state;
     }
+
+//    public JSONObject toJson() {
+//        JSONObject json = new JSONObject();
+//        json.put("task", task);
+//        json.put("state", state);
+//        return json;
+//    }
+
+
 }

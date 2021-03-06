@@ -2,19 +2,32 @@ package ui;
 
 import model.Task;
 import model.ToDoList;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 import java.util.Scanner;
 
 public class ToStartApp {
-    private Task task;
-    private Task statue;
+
+    private String state;
     private Scanner input;
     private boolean update;
-
     private String string;
     private int index;
+    private static final String JSON_STORE = "./data/todoList.json";
 
-    public ToStartApp() {
+    private ToDoList todoList;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
+
+    public ToStartApp() throws FileNotFoundException {
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
+        todoList = new ToDoList();
         runToStart();
     }
 
@@ -24,65 +37,19 @@ public class ToStartApp {
     private void runToStart() {
         boolean keepGoing = true;
         String choice = null;
-
         Scanner input = new Scanner(System.in);
-        ToDoList todoList = new ToDoList();
-
         while (keepGoing) {
             displayMenu();
-//            System.out.println("--------Welcome to ToStart--------");
-//            System.out.println("1 Add task");
-//            System.out.println("2 Delete task");
-//            System.out.println("3 Mark task");
-//            System.out.println("4 View List");
-//            System.out.println("5 Quit");
-//            System.out.println("----------------------------------");
 
-            System.out.println("Please enter your selection: ");
             choice = input.nextLine();
-            if (choice.equals("1")) {
-                doAddTask(todoList);
-//                Task newTask = makeTask();
-//                todoList.addTask(newTask);
-            } else if (choice.equals("2")) {
-                doDeleteTask(todoList, index);
-//                System.out.println("Please enter Task you want to delete:");
-//                String taskName = input.nextLine();
-//                todoList.deleteTask(taskName);
-//                if (todoList.deleteTask(taskName)) {
-//                    System.out.println(" The statue fo this task is successfully updated");
-//
-//                } else {
-//                    System.out.println("This task does not exist");
-//                }
-
-            } else if (choice.equals("3")) {
-                doMarkTask(todoList);
-//                Task taskWithNewStatue = updateStatue();
-//                todoList.updateTaskStatue(taskWithNewStatue);
-//                if (todoList.updateTaskStatue(taskWithNewStatue)) {
-//                    System.out.println(" The statue fo this task is successfully updated");
-//
-//                } else {
-//                    System.out.println("This task does not exist");
-//                }
-
-            } else if (choice.equals("4")) {
-                doDisplayList(todoList, string);
-
-            } else if (choice.equals("5")) {
+            if (choice.equals("7")) {
                 keepGoing = false;
             } else {
-                System.out.println("Selection not valid");
+                processChoice(choice);
             }
         }
-
         System.out.println("\nGoodbye!");
     }
-//    private void init(){
-//        Scanner input = new Scanner(System.in);
-//        ToDoList todoList = new ToDoList();
-//    }
 
     private void displayMenu() {
         System.out.println("--------Welcome to ToStart--------");
@@ -90,16 +57,46 @@ public class ToStartApp {
         System.out.println("2 Delete task");
         System.out.println("3 Mark task");
         System.out.println("4 View todo-list");
-        System.out.println("5 Quit");
+        System.out.println("5 Save todolist to file");
+        System.out.println("6 Load todolist to file");
+        System.out.println("7 Quit");
         System.out.println("----------------------------------");
+        System.out.println("Please enter your selection: ");
     }
 
-    private void doAddTask(ToDoList todoList) {
+    private void processChoice(String choice) {
+        if (choice.equals("1")) {
+            doAddTask();
+
+        } else if (choice.equals("2")) {
+            doDeleteTask(index);
+
+
+        } else if (choice.equals("3")) {
+            doMarkTask();
+
+
+        } else if (choice.equals("4")) {
+            doDisplayList();
+
+        } else if (choice.equals("5")) {
+            saveToStartList();
+
+        } else if (choice.equals("6")) {
+            loadToStartList();
+
+        } else {
+            System.out.println("Selection not valid");
+        }
+    }
+
+
+    private void doAddTask() {
         Task newTask = makeTask();
         todoList.addTask(newTask);
     }
 
-    private void doDeleteTask(ToDoList todoList, int index) {
+    private void doDeleteTask(int index) {
         if (todoList.getSize() == 0) {
             return;
         } else {
@@ -123,7 +120,7 @@ public class ToStartApp {
         }
     }
 
-    private void doMarkTask(ToDoList todoList) {
+    private void doMarkTask() {
         if (todoList.getSize() == 0) {
             return;
         } else {
@@ -138,8 +135,12 @@ public class ToStartApp {
         }
     }
 
-    private void doDisplayList(ToDoList todoList, String s) {
-        System.out.println(todoList.displayToDoList());
+    private void doDisplayList() {
+//        System.out.println(todoList.displayToDoList());
+        List<Task> todos = todoList.getToDoList();
+        for (Task t : todos) {
+            System.out.println(t);
+        }
 
     }
 
@@ -148,9 +149,9 @@ public class ToStartApp {
         System.out.println("Please enter Task:");
         String task = input.nextLine();
         System.out.println("Please choose State of this task, In-progress or Done:");
-        String statue = input.nextLine();
+        String state = input.nextLine();
 
-        Task t = new Task(task, statue);
+        Task t = new Task(task, state);
         return t;
 
     }
@@ -163,6 +164,31 @@ public class ToStartApp {
         String state = input.nextLine();
         Task t = new Task(task, state);
         return t;
+    }
+
+    // EFFECTS: saves the ToStartList to file
+    private void saveToStartList() {
+        try {
+//            PrintWriter writer = new PrintWriter(JSON_STORE,"UTF-8");
+            jsonWriter.open();
+            jsonWriter.write(todoList);
+            jsonWriter.close();
+            System.out.println("Saved " + " ToStartList to " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads ToStartList from file
+    private void loadToStartList() {
+        try {
+            todoList = jsonReader.read();
+            System.out.println(todoList);
+            System.out.println("Loaded " + "ToStartList from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
     }
 }
 
