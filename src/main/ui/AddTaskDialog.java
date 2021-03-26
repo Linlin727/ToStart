@@ -17,13 +17,13 @@ public class AddTaskDialog extends JDialog {
         toDoList = new ToDoList();
 
         //组装视图
-        this.setLocation(200,200);
+        this.setLocation(200, 200);
 
         Box box = Box.createVerticalBox();
         //组装task
         Box taskBox = Box.createHorizontalBox();
         JLabel taskLabel = new JLabel("Task");
-        JTextField taskField = new JTextField(27);
+        JTextField taskField = new JTextField(7);
         taskBox.add(taskLabel);
         taskBox.add(Box.createHorizontalStrut(20));
         taskBox.add(taskField);
@@ -32,7 +32,7 @@ public class AddTaskDialog extends JDialog {
 
         Box stateBox = Box.createHorizontalBox();
         JLabel stateLabel = new JLabel("State");
-        JTextField stateField = new JTextField(27);
+        JTextField stateField = new JTextField(7);
         stateBox.add(stateLabel);
         stateBox.add(Box.createHorizontalStrut(20));
         stateBox.add(stateField);
@@ -49,7 +49,7 @@ public class AddTaskDialog extends JDialog {
                 String state = stateField.getText().trim();
                 Task t = new Task(task, state);
                 toDoList.addTask(t);
-               dispose();
+                dispose();
 
             }
         });
@@ -69,7 +69,6 @@ public class AddTaskDialog extends JDialog {
         spaceBox.add(Box.createHorizontalStrut(70));
 
         this.add(spaceBox);
-
 
 
     }

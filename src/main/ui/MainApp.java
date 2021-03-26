@@ -17,16 +17,20 @@ import java.io.IOException;
 
 public class MainApp extends JPanel
         implements ListSelectionListener {
+
     private JList list;
     private DefaultListModel listModel;
 
-    private ToDoList todolist;
-    private Task t;
+    private ToDoList todoList;
+    private Task task1;
 
+    private static final String saveString = "Save ToStartList";
     private static final String addString = "Add Task";
     private static final String deleteString = "Delete Task";
+    private static final String markString = "Mark Task";
     private JButton deleteButton;
     private JTextField task;
+    private JTextField state;
 
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
@@ -35,20 +39,12 @@ public class MainApp extends JPanel
 
     public MainApp() {
         super(new BorderLayout());
-        jsonWriter = new JsonWriter(JSON_STORE);
-        jsonReader = new JsonReader(JSON_STORE);
-
-        listModel = new DefaultListModel();
+        init();
         loadTodoList();
 
 
         //Create the list and put it in a scroll pane.
-        list = new JList(listModel);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setSelectedIndex(0);
-        list.addListSelectionListener(this);
-        list.setVisibleRowCount(5);
-        JScrollPane listScrollPane = new JScrollPane(list);
+        makeListScrollPane();
 
         JButton addButton = new JButton(addString);
         MainApp.AddListener addListener = new MainApp.AddListener(addButton);
@@ -56,17 +52,35 @@ public class MainApp extends JPanel
         addButton.addActionListener(addListener);
         addButton.setEnabled(false);
 
-        deleteButton = new JButton(deleteString);
-        deleteButton.setActionCommand(deleteString);
-        deleteButton.addActionListener(new MainApp.DeleteListener());
+        makeDeleteButton();
+
+//        JButton markButton = new JButton(markString);
+//        markButton = new JButton(markString);
+//        markButton.setActionCommand(markString);
+//        markButton.addActionListener(new MainApp.MarkListener());
 
         task = new JTextField(10);
         task.addActionListener(addListener);
         task.getDocument().addDocumentListener(addListener);
-        String taskName = listModel.getElementAt(
-                list.getSelectedIndex()).toString();
+//        String taskName = listModel.getElementAt(
+//                listModel.size() - 1).toString();
+
+        state = new JTextField(10);
+        state.addActionListener(addListener);
+        state.getDocument().addDocumentListener(addListener);
+//        String stateName = listModel.getElementAt(
+//                listModel.size() - 1).toString();
+
+
+        addMenuBar();
 
         //Create a panel that uses BoxLayout.
+        makeButtonPane(addButton);
+
+
+    }
+
+    private void makeButtonPane(JButton addButton) {
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new BoxLayout(buttonPane,
                 BoxLayout.LINE_AXIS));
@@ -75,26 +89,68 @@ public class MainApp extends JPanel
         buttonPane.add(new JSeparator(SwingConstants.VERTICAL));
         buttonPane.add(Box.createHorizontalStrut(5));
         buttonPane.add(task);
+        buttonPane.add(state);
         buttonPane.add(addButton);
+//        buttonPane.add(saveButton);
         buttonPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
-        add(listScrollPane, BorderLayout.CENTER);
         add(buttonPane, BorderLayout.PAGE_END);
     }
 
+    private void makeDeleteButton() {
+        deleteButton = new JButton(deleteString);
+        deleteButton.setActionCommand(deleteString);
+        deleteButton.addActionListener(new DeleteListener());
+    }
+
+    private void makeListScrollPane() {
+        list = new JList(listModel);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.setSelectedIndex(0);
+        list.addListSelectionListener(this);
+        list.setVisibleRowCount(5);
+        JScrollPane listScrollPane = new JScrollPane(list);
+        add(listScrollPane, BorderLayout.CENTER);
+    }
+
+    private void addMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Quit");
+        JMenuItem menuItem = new JMenuItem("Quit ToStart App");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        menu.add(menuItem);
+        menuBar.add(menu);
+        add(menuBar, BorderLayout.NORTH);
+    }
+
+    private void init() {
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
+        listModel = new DefaultListModel();
+        todoList = new ToDoList();
+    }
+
+
     private void loadTodoList() {
         try {
-//            ToDoList todoList = new ToDoList();
-            ToDoList todoList = jsonReader.read();
+            todoList = jsonReader.read();
             for (int i = 0; i < todoList.getSize(); i++) {
-                t = todoList.getTask(i);
-                String s = t.getTask();
+                task1 = todoList.getTask(i);
+//                String s = "Task: " + task1.getTask() + " " + "State: " + task1.getState();
+                String s = task1.getTask() + " | " + task1.getState();
                 listModel.addElement(s);
             }
         } catch (IOException e) {
             System.out.println("a");
         }
+
+
     }
+
 
     class DeleteListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -102,7 +158,20 @@ public class MainApp extends JPanel
             //there's a valid selection
             //so go ahead and remove whatever's selected.
             int index = list.getSelectedIndex();
+            todoList.deleteTask(listModel.getElementAt(index).toString().split("\\s\\|\\s")[0]);
+            try {
+
+                jsonWriter.open();
+                jsonWriter.write(todoList);
+                jsonWriter.close();
+            } catch (IOException ex) {
+                System.out.println("Unable to write to file: " + JSON_STORE);
+            }
+
+
             listModel.remove(index);
+
+
 
             int size = listModel.getSize();
 
@@ -121,6 +190,7 @@ public class MainApp extends JPanel
         }
     }
 
+
     //This listener is shared by the text field and the hire button.
     class AddListener implements ActionListener, DocumentListener {
         private boolean alreadyEnabled = false;
@@ -132,7 +202,10 @@ public class MainApp extends JPanel
 
         //Required by ActionListener.
         public void actionPerformed(ActionEvent e) {
-            String name = task.getText();
+            String name = task.getText() + " | " + state.getText();
+
+
+
 
             //User didn't type in a unique name...
             if (name.equals("") || alreadyInList(name)) {
@@ -149,17 +222,35 @@ public class MainApp extends JPanel
                 index++;
             }
 
-            listModel.insertElementAt(task.getText(), index);
+
             //If we just wanted to add to the end, we'd do this:
-            //listModel.addElement(employeeName.getText());
+            listModel.addElement(task.getText() + " | " + state.getText());
+
+            todoList.addTask(new Task(task.getText(),state.getText()));
+
+            saveAddition();
+
 
             //Reset the text field.
             task.requestFocusInWindow();
             task.setText("");
+            state.requestFocusInWindow();
+            state.setText("");
 
             //Select the new item and make it visible.
             list.setSelectedIndex(index);
             list.ensureIndexIsVisible(index);
+        }
+
+        private void saveAddition() {
+            try {
+
+                jsonWriter.open();
+                jsonWriter.write(todoList);
+                jsonWriter.close();
+            } catch (IOException ex) {
+                System.out.println("Unable to write to file: " + JSON_STORE);
+            }
         }
 
         //This method tests for string equality. You could certainly
@@ -217,6 +308,7 @@ public class MainApp extends JPanel
         }
     }
 
+
     /**
      * Create the GUI and show it.  For thread safety,
      * this method should be invoked from the
@@ -224,13 +316,15 @@ public class MainApp extends JPanel
      */
     private static void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("ListDemo");
+        JFrame frame = new JFrame("ToStart");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 
         //Create and set up the content pane.
         JComponent newContentPane = new MainApp();
         newContentPane.setOpaque(true); //content panes must be opaque
         frame.setContentPane(newContentPane);
+
 
         //Display the window.
         frame.pack();
