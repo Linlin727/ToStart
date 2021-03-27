@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+// CLASS EFFECTS:  Create and set up a content pane.
+
 public class MainApp extends JPanel
         implements ListSelectionListener {
 
@@ -36,14 +38,12 @@ public class MainApp extends JPanel
     private JsonReader jsonReader;
     private static final String JSON_STORE = "./data/todoList.json";
 
-
+    // MODIFIES: this
+    // EFFECTS:  Create and set up a content pane.
     public MainApp() {
         super(new BorderLayout());
         init();
         loadTodoList();
-
-
-        //Create the list and put it in a scroll pane.
         makeListScrollPane();
 
         JButton addButton = new JButton(addString);
@@ -70,15 +70,14 @@ public class MainApp extends JPanel
         state.getDocument().addDocumentListener(addListener);
 //        String stateName = listModel.getElementAt(
 //                listModel.size() - 1).toString();
-
-
         addMenuBar();
-
-        //Create a panel that uses BoxLayout.
         makeButtonPane(addButton);
 
 
     }
+
+    // MODIFIES: this
+    // EFFECTS:  Create a button pane, and put it in the content pane.
 
     private void makeButtonPane(JButton addButton) {
         JPanel buttonPane = new JPanel();
@@ -91,16 +90,24 @@ public class MainApp extends JPanel
         buttonPane.add(task);
         buttonPane.add(state);
         buttonPane.add(addButton);
-//        buttonPane.add(saveButton);
         buttonPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         add(buttonPane, BorderLayout.PAGE_END);
     }
+
+
+    // MODIFIES: this
+    // EFFECTS:  Create a delete button and make it functional.
 
     private void makeDeleteButton() {
         deleteButton = new JButton(deleteString);
         deleteButton.setActionCommand(deleteString);
         deleteButton.addActionListener(new DeleteListener());
     }
+
+
+    // MODIFIES: this
+    // EFFECTS:  Create the list and a scroll pane, put the list in a scroll pane.
+    // Then put the scroll pane in the content pane.
 
     private void makeListScrollPane() {
         list = new JList(listModel);
@@ -112,12 +119,16 @@ public class MainApp extends JPanel
         add(listScrollPane, BorderLayout.CENTER);
     }
 
+    // MODIFIES: this
+    // EFFECTS:  Create a menu bar and put it in the content pane.
+
     private void addMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("Quit");
-        JMenuItem menuItem = new JMenuItem("Quit ToStart App");
+        JMenuItem menuItem = new JMenuItem("Save and Quit ToStart App", new ImageIcon("data/images.png"));
         menuItem.addActionListener(new ActionListener() {
             @Override
+            // EFFECTS: Stop MainApp.
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
@@ -127,6 +138,10 @@ public class MainApp extends JPanel
         add(menuBar, BorderLayout.NORTH);
     }
 
+
+    // MODIFIES: this
+    // EFFECTS:  initializes a DefaultListMode, a JsonWriter, a JsonReader, and a ToDoList
+    // to be used.
     private void init() {
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
@@ -135,12 +150,14 @@ public class MainApp extends JPanel
     }
 
 
+    // MODIFIES: todoList and listModel
+    // EFFECTS:  load the todoList saved in json file, then add every task in the todoList to listModel
+
     private void loadTodoList() {
         try {
             todoList = jsonReader.read();
             for (int i = 0; i < todoList.getSize(); i++) {
                 task1 = todoList.getTask(i);
-//                String s = "Task: " + task1.getTask() + " " + "State: " + task1.getState();
                 String s = task1.getTask() + " | " + task1.getState();
                 listModel.addElement(s);
             }
@@ -152,11 +169,17 @@ public class MainApp extends JPanel
     }
 
 
+    // CLASS EFFECTS: Make a listener for delete button.
+    // When the delete button is clicked with valid selection,
+    // the selected task is gone from the listModel and removed from the todoList.
+    // Also, this modify will be saved automatically.
+
     class DeleteListener implements ActionListener {
+
+        // REQUIRE: valid selection, one task is selected.
+        // EFFECTS: Delete the selected task from the listModel and remove it from the todoList.
+        // Also, this modify will be saved automatically.
         public void actionPerformed(ActionEvent e) {
-            //This method can be called only if
-            //there's a valid selection
-            //so go ahead and remove whatever's selected.
             int index = list.getSelectedIndex();
             todoList.deleteTask(listModel.getElementAt(index).toString().split("\\s\\|\\s")[0]);
             try {
@@ -170,7 +193,6 @@ public class MainApp extends JPanel
 
 
             listModel.remove(index);
-
 
 
             int size = listModel.getSize();
@@ -191,7 +213,12 @@ public class MainApp extends JPanel
     }
 
 
-    //This listener is shared by the text field and the hire button.
+    // CLASS EFFECTS: Make a listener for add task button.
+    // This listener is shared by the text field and the add task button.
+    // When the add button is clicked with valid inputs,
+    // new unique task will be added to the end of listModel and the todoList.
+    // Also, this modify will be saved automatically.Text field will be reset.
+
     class AddListener implements ActionListener, DocumentListener {
         private boolean alreadyEnabled = false;
         private JButton button;
@@ -200,14 +227,14 @@ public class MainApp extends JPanel
             this.button = button;
         }
 
-        //Required by ActionListener.
+
+        // EFFECTS: When the add button is clicked with valid inputs,
+        // new unique task will be added to the end of listModel and the todoList.
+        // Also, this modify will be saved automatically.Text field will be reset.
+
         public void actionPerformed(ActionEvent e) {
             String name = task.getText() + " | " + state.getText();
 
-
-
-
-            //User didn't type in a unique name...
             if (name.equals("") || alreadyInList(name)) {
                 Toolkit.getDefaultToolkit().beep();
                 task.requestFocusInWindow();
@@ -223,10 +250,9 @@ public class MainApp extends JPanel
             }
 
 
-            //If we just wanted to add to the end, we'd do this:
             listModel.addElement(task.getText() + " | " + state.getText());
 
-            todoList.addTask(new Task(task.getText(),state.getText()));
+            todoList.addTask(new Task(task.getText(), state.getText()));
 
             saveAddition();
 
@@ -242,6 +268,9 @@ public class MainApp extends JPanel
             list.ensureIndexIsVisible(index);
         }
 
+
+        // EFFECTS:  save the todoList with the new task to json file.
+
         private void saveAddition() {
             try {
 
@@ -253,29 +282,30 @@ public class MainApp extends JPanel
             }
         }
 
-        //This method tests for string equality. You could certainly
-        //get more sophisticated about the algorithm.  For example,
-        //you might want to ignore white space and capitalization.
+        //EFFECTS: Return true if the task is already exist.
+
         protected boolean alreadyInList(String name) {
             return listModel.contains(name);
         }
 
-        //Required by DocumentListener.
+        //EFFECTS: Enable the button if it is not already enable. Required by DocumentListener.
         public void insertUpdate(DocumentEvent e) {
             enableButton();
         }
 
-        //Required by DocumentListener.
+        //EFFECTS: Call the handleEmptyTextField method.Required by DocumentListener.
         public void removeUpdate(DocumentEvent e) {
             handleEmptyTextField(e);
         }
 
-        //Required by DocumentListener.
+        //EFFECTS: If the text field is not empty, enable the button.
         public void changedUpdate(DocumentEvent e) {
             if (!handleEmptyTextField(e)) {
                 enableButton();
             }
         }
+
+        //EFFECTS: Enable the button.
 
         private void enableButton() {
             if (!alreadyEnabled) {
@@ -283,6 +313,8 @@ public class MainApp extends JPanel
             }
         }
 
+        //EFFECTS: Return true of the text field is empty and enable the button,
+        // return false otherwise
         private boolean handleEmptyTextField(DocumentEvent e) {
             if (e.getDocument().getLength() <= 0) {
                 button.setEnabled(false);
@@ -293,7 +325,9 @@ public class MainApp extends JPanel
         }
     }
 
-    //This method is required by ListSelectionListener.
+    // EFFECTS: when e.getValueIsAdjusting() == false, but there is no selection ,disable fire button.
+    // Otherwise,enable the fire button.
+
     public void valueChanged(ListSelectionEvent e) {
         if (e.getValueIsAdjusting() == false) {
 
@@ -309,11 +343,9 @@ public class MainApp extends JPanel
     }
 
 
-    /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from the
-     * event-dispatching thread.
-     */
+    // EFFECTS: Create the GUI and show it.
+    // For thread safety,this method should be invoked from the event-dispatching thread.
+
     private static void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("ToStart");
@@ -331,9 +363,14 @@ public class MainApp extends JPanel
         frame.setVisible(true);
     }
 
+
+    // CLASS EFFECTS:creating and showing ToStart App's GUI.
+
     public static void main(String[] args) {
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
+
+        //EFFECTS:Schedule a job for the event-dispatching thread:
+        // creating and showing this application's GUI.
+
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI();
