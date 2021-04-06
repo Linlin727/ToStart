@@ -1,9 +1,9 @@
 package persistence;
 
-import model.Task;
+
 import model.ToDoList;
 import org.json.JSONArray;
-import org.json.JSONObject;
+
 
 import java.io.*;
 import java.util.ArrayList;

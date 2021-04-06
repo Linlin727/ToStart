@@ -96,12 +96,6 @@ public class ToDoList implements Writable {
     public boolean contains(Task t) {
         return todoList.contains(t);
     }
-//    @Override
-//    public JSONObject toJson() {
-//        JSONObject json = new JSONObject();
-//        json.put("todoList", toJsonArray());
-//        return json;
-//    }
 
 
     // EFFECTS: returns tasks in this todoList as a JSON array

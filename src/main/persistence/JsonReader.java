@@ -1,5 +1,6 @@
 package persistence;
 
+import exception.InvalidUserInputException;
 import model.ToDoList;
 import model.Task;
 import org.json.JSONArray;
@@ -53,7 +54,11 @@ public class JsonReader {
             JSONObject json = jsonArray.getJSONObject(i);
             String task = json.getString("task");
             String state = json.getString("state");
-            todoList.addTask(new Task(task,state));
+            try {
+                todoList.addTask(new Task(task, state));
+            } catch (InvalidUserInputException exception) {
+                System.out.println("wrong!!");
+            }
         }
         return todoList;
     }

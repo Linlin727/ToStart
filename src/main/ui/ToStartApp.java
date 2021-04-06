@@ -1,5 +1,6 @@
 package ui;
 
+import exception.InvalidUserInputException;
 import model.Task;
 import model.ToDoList;
 import persistence.JsonReader;
@@ -150,8 +151,12 @@ public class ToStartApp {
         String task = input.nextLine();
         System.out.println("Please choose State of this task, In-progress or Done:");
         String state = input.nextLine();
-
-        Task t = new Task(task, state);
+        Task t = null;
+        try {
+            t = new Task(task, state);
+        } catch (InvalidUserInputException e) {
+            System.out.println(e.getMessage());
+        }
         return t;
 
     }
@@ -162,7 +167,12 @@ public class ToStartApp {
         String task = input.nextLine();
         System.out.println("Please choose a new state for this task");
         String state = input.nextLine();
-        Task t = new Task(task, state);
+        Task t = null;
+        try {
+            t = new Task(task, state);
+        } catch (InvalidUserInputException e) {
+            System.out.println(e.getMessage());
+        }
         return t;
     }
 

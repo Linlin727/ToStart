@@ -23,10 +23,21 @@ As a user, I want to be able to add a task to my to-do list
 
 As a user, I want to be able to view the list of tasks on my to-do list
 
-As a user, I want to be able to mark the statue of tasks on my to-do list
-
 As a user, I want to be able to delete a task from my to-do-list
 
 As a user, I want to be able to save my to-do list to file.
 
 As a user, I want to be able to load my to-do list.
+
+##Phase 4: Task 2
+
+Option 1：In Task class, I make the constructor of task to have a robust design by adding two methods checkTask and checkState to 
+make sure the user input for a task has no punctuations, and the state is no longer than 30 characters. 
+Otherwise, exceptions will be thrown.
+
+##Phase 4: Task 3
+
+- In ToDoList class, I would add a "SearchTask" method that can be used by both updateTaskState method and deleteTask method
+to avoid duplication.
+
+- I would create two new classes for the two inner classes in the MainApp class which can make the ui more clear.

@@ -1,5 +1,6 @@
 package ui;
 
+import exception.InvalidUserInputException;
 import model.Task;
 import model.ToDoList;
 import persistence.JsonReader;
@@ -24,7 +25,7 @@ public class MainApp extends JPanel
     private DefaultListModel listModel;
 
     private ToDoList todoList;
-    private Task task1;
+
 
     private static final String saveString = "Save ToStartList";
     private static final String addString = "Add Task";
@@ -156,6 +157,7 @@ public class MainApp extends JPanel
     private void loadTodoList() {
         try {
             todoList = jsonReader.read();
+            Task task1 = null;
             for (int i = 0; i < todoList.getSize(); i++) {
                 task1 = todoList.getTask(i);
                 String s = task1.getTask() + " | " + task1.getState();
@@ -183,7 +185,6 @@ public class MainApp extends JPanel
             int index = list.getSelectedIndex();
             todoList.deleteTask(listModel.getElementAt(index).toString().split("\\s\\|\\s")[0]);
             try {
-
                 jsonWriter.open();
                 jsonWriter.write(todoList);
                 jsonWriter.close();
@@ -243,16 +244,20 @@ public class MainApp extends JPanel
             }
 
             int index = list.getSelectedIndex(); //get selected index
-            if (index == -1) { //no selection, so insert at beginning
-                index = 0;
-            } else {           //add after the selected item
-                index++;
+//            if (index == -1) { //no selection, so insert at beginning
+//                index = 0;
+//            } else {           //add after the selected item
+//                index++;
+//            }
+            try {
+                todoList.addTask(new Task(task.getText(), state.getText()));
+            } catch (InvalidUserInputException exception) {
+                JOptionPane.showMessageDialog(null,exception.getMessage());;
+                return;
             }
-
 
             listModel.addElement(task.getText() + " | " + state.getText());
 
-            todoList.addTask(new Task(task.getText(), state.getText()));
 
             saveAddition();
 

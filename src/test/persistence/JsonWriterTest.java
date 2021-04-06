@@ -1,5 +1,6 @@
 package persistence;
 
+import exception.InvalidUserInputException;
 import model.Task;
 import model.ToDoList;
 import org.junit.jupiter.api.Test;
@@ -66,6 +67,8 @@ class JsonWriterTest extends JsonTest {
             checkTask("bb", "bb", todoList.getTask(1));
 
         } catch (IOException e) {
+            fail("Exception should not have been thrown");
+        }catch (InvalidUserInputException e){
             fail("Exception should not have been thrown");
         }
     }
