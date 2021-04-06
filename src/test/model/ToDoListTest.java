@@ -100,7 +100,7 @@ public class ToDoListTest {
             fail("Should not throw InvalidStateException");
         }
         testToDoList.addTask(task2);
-        assertEquals(testToDoList.displayToDoList(), "[task: aa state: bb, task: cc state: dd]");
+        assertEquals(testToDoList.displayToDoList(), "[task: aa state: bb, task: cc  state: dd]");
     }
 
     @Test
