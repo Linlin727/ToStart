@@ -1,5 +1,6 @@
 package persistence;
 
+import exception.InvalidUserInputException;
 import model.Task;
 import model.ToDoList;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,16 @@ class JsonReaderTest extends JsonTest {
             assertEquals(2, todoList.getSize());
             checkTask("aa", "aa", todoList.getTask(0));
             checkTask("bb", "bb", todoList.getTask(1));
+        } catch (IOException e) {
+            fail("Couldn't read from file");
+        }
+    }
+
+    @Test
+    void testReaderGeneralToDoListInvalidInput() {
+        JsonReader reader = new JsonReader("./data/testReaderGeneralToDoListInvalidInput.json");
+        try {
+            ToDoList todoList = reader.read();
         } catch (IOException e) {
             fail("Couldn't read from file");
         }
